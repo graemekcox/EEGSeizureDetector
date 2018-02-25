@@ -1,6 +1,6 @@
 function [labels, features] = getReadSeizureData(root)
 
-    %Get all interIcalClips in the folder
+%     Get all interIcalClips in the folder
     interIctalClips = dir([root '*_interictal_*.mat']);
     ictalClips = dir([root '*_ictal_*.mat']);
     
@@ -41,5 +41,17 @@ function [labels, features] = getReadSeizureData(root)
         features(end+1:end+size(feat,1), 1:numFeat) = feat;
         labels = [labels; label'];
     end
-
+    testClips = dir([root '*_test_*.mat']);
+%     for i=1:size(testClips,1)
+% 
+%         file = [root testClips(i).name];
+%         segment = load(file);
+%         data = segment.data;
+% %       %  Function takes in label and file name
+% % %         [label,feat] = waveletFeatureExtractor(file, 'interictal');
+% %         [label,feat] = waveletFeatureExtractor(file, -1);
+% %         %Add features and labels to arrays
+% %         features(end+1:end+size(feat,1), 1:numFeat) = feat;
+% %         labels = [labels; label'];
+% %     end
 end
