@@ -1,4 +1,4 @@
-function [labels, features] = getReadSeizureData(root)
+function [labels, features,testClips] = getReadSeizureData(root)
 
     %Get all interIcalClips in the folder
     interIctalClips = dir([root '*_interictal_*.mat']);
@@ -46,9 +46,6 @@ function [labels, features] = getReadSeizureData(root)
     
     %% Read in test clips
     testClips = dir([root '*_test_*.mat']);
-%     for i=1:size(testClips,1)
-% 
-%         
-%     end
-    fprintf('Finished reading in %d test clips for %s\n',size(testClips,1),root)
+
+%     fprintf('Finished reading in %d test clips for %s\n',size(testClips,1),root)
 end
