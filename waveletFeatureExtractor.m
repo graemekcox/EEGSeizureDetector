@@ -1,4 +1,4 @@
-function [labels, features]  = waveletFeatureExtractor(file,label)
+function [features]  = waveletFeatureExtractor(file)
 %% Extracts features from Kaggle UPenn EEG Seizure detection data
 % Inputs are full-path to the eeg data.
     segment = load(file);
@@ -39,8 +39,6 @@ function [labels, features]  = waveletFeatureExtractor(file,label)
         features(i,3) = mean(f_seiz(125:150));
         features(i,4) = mean(f_seiz(150:175));
         features(i,5) = mean(f_seiz(175:200));
-%         labels{i } = label;
-        labels(i) = label;
     end
 
 

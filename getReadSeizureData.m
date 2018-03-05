@@ -20,7 +20,7 @@ function [labels, features,test_data] = getReadSeizureData(root)
         file = [root interIctalClips(i).name];
         
         %Function takes in label and file name
-        [label,feat] = waveletFeatureExtractor(file, 1);
+        [feat] = waveletFeatureExtractor(file);
         
         %% Append features and labels to array
         features = [features;feat];
@@ -36,7 +36,7 @@ function [labels, features,test_data] = getReadSeizureData(root)
         file = [root ictalClips(i).name];
         
         %Function takes in label and file name
-        [label,feat] = waveletFeatureExtractor(file, -1);
+        [feat] = waveletFeatureExtractor(file);
         
         %%Add features and labels to arrays
         features = [features;feat];
@@ -54,7 +54,7 @@ function [labels, features,test_data] = getReadSeizureData(root)
         file = [root testClips(i).name];
         
         %Function takes in label and file name
-        [label,feat] = waveletFeatureExtractor(file, -1);
+        [feat] = waveletFeatureExtractor(file);
         
         %%Add features and labels to arrays
         test_data = [test_data;feat];
