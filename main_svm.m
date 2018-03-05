@@ -14,8 +14,14 @@ folders = dir(root);
 folders(ismember({folders.name}, {'.','..','.DS_Store'})) = [];
 
 numFeat = 5;
-features = zeros(1,numFeat);
-labels = zeros(1,1);
+% features = zeros(1,numFeat);
+% labels = zeros(1,1);
+features = [];
+labels = [];
+
+test_data = [];
+% test_data = zeros(1,numFeat);%Hold features and labels
+
 
 fprintf('Beginning to extract features!\n\n')
 tic
@@ -26,16 +32,19 @@ for j=1:length(folders)
     [temp_labels, temp_features, temp_test] = getReadSeizureData(subfolder);
     
     fprintf('Finished finding all features for folder %s\n\n',folders(j).name)
-%     fprintf('Length of features: %d    Number of features: %d\n',size(temp_features,1),size(temp_features,2))
-%     fprintf('Length of labels: %d\n\n',size(temp_labels,1))
-%     
+
     %% Append data to existing feature and label list.
-    features(end+1:end+size(temp_features,1), 1:numFeat) = temp_features;
+%     features(end+1:end+size(temp_features,1), 1:numFeat) = temp_features;
+    features = [features; temp_features];
     labels = [labels; temp_labels];
+    
+    %%Append test data to test set
+    test_data = [test_data;temp_test];
 end
 
-features(1,:)  = []; % First row is filled with zeros
-labels(1,:) = [];
+% features(1,:)  = []; % First row is filled with zeros
+% labels(1,:) = [];
+% test_data(1,:) = [];
 
 fprintf('\n\n----------Feature Extraction complete----------\n\n')
 
@@ -66,18 +75,11 @@ else
     data(:,2:end) = features(:,:);
     csvwrite('features.csv',data);
     fprintf('\nFeatures and labels written to features.csv\n')
+    
+    csvwrite('testData.csv',test_data);
+    fprintf('\nTest features have been written to testData.csv\n')
 end
-% % Get all subfolders of our list
-% patients = dir(root);
-% patients(ismember({patients.name}, {'.','..','.DS_Store'})) = [];
-% 
-% for i=1:length(patients)
-%     subfolder = fullfile(root,patients(i).name,'/');
-%     [labels, features] = getReadSeizureData(subfolder);
-% 
-%     fprintf('Finished finding all features\n\n')
-%     fprintf('Length of features: %d    Number of features: %d\n',size(features,1),size(features,2))
-%     fprintf('Length of labels: %d\n\n',size(labels,1))
-% end
+
+
 toc
 fprintf('ALL DONE!\n')

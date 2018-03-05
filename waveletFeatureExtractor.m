@@ -19,7 +19,7 @@ function [labels, features]  = waveletFeatureExtractor(file,label)
 %     labels= {};
     labels = zeros(1,1);
     for i = 1:num_elec
-        %Read in the electrode data
+          %Read in the electrode data
         data_elec = data(i,:);
         
         [LoD,HiD,LoR,HiR] = wfilters(wname);
