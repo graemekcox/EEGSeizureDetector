@@ -1,67 +1,48 @@
+
+import sys
+
+sys.path.insert(0, '../PreprocessingFunctions')
+
+import fileReader
+
 from sklearn import datasets, svm, metrics
+from sklearn.feature_extraction.text import CountVectorizer
 from sklearn.model_selection import cross_val_score, train_test_split, ShuffleSplit
 import cPickle
 import numpy as np 
 
-fn = '/Users/graemecox/Documents/Capstone/Code/eegSvm/labels.txt'
-UPDATE_FEAT = 0
+UPDATE_FEAT = 1
 CREATE_CLASSIFIER = 1
 CLASSIFIER_NAME = 'savedClassifier.pkl'
-
-def readLabels(root):
-	labels = f.read()
-	# For Labels
-	labels = []
-	with open(fn) as f:
-		for line in f:
-			#Split each line by comma, then save as a list of floats
-			currentline = [float(x) for x in line.split(",")]
-			labels.append(currentline)
-	f.close()
-	np.save('labels_py',np.array(labels))
-	return labels
-	
-
-def readFeatures(root):
-	# For features
-	fn = '/Users/graemecox/Documents/Capstone/Code/eegSvm/features.txt'
-
-	feat = []
-	with open(fn) as f:
-		for line in f:
-			currentline = [float(x) for x in line.split(",")]
-			feat.append(currentline)
-	f.close()
-	np.save('feat_py',np.array(feat))
-	return feat
-
+root = '/Users/graemecox/Documents/Capstone/Code/eegSvm/'
 
 def createLinearClassifier(X_train, y_train):
-
-	clf = svm.SVC()
+  
+	model = svm.SVC(C=25, kernel='rbf',degree=1)
 
 	# Data stuff
 	y_train.ravel()
 
-	clf.fit(X_train,y_train)
+	model.fit(X_train,y_train)
 	print("Classifier has been created")
 	#Save classifier
 	with open(CLASSIFIER_NAME,'wb') as fid:
-		cPickle.dump(clf, fid)
+		cPickle.dump(model, fid)
 	print("Classifier has been saved")
-	return clf
+	return model
 
 def crossValidationStuff(model, X_test, y_test, cv_num):
-	scores = cross_val_score(model, X_test, y_test, cv_num)
-	print("Accuracy: %0.2f (+/- %0.2f)" % (scores.mean(), scores.std() *2))
-
+	scores = cross_val_score(model, X_test, y_test, cv=cv_num)
+	print("Accuracy: %0.5f (+/- %0.5f)" % (scores.mean(), scores.std() *2))
 
 
 
 # If we want to load from the text file, or load from numpy
 if (UPDATE_FEAT):
-	labels = readLabels(root)
-	feat = readFeatures(root)
+	# labels = readLabels(root)
+	# feat = readFeatures(root)
+	labels = readTextFile()
+
 	print("Read in labels and features")
 else:
 	labels = np.load('labels_py.npy')
@@ -79,6 +60,7 @@ test_y = test_y.reshape(c,)
 # Create or load classifier
 
 if (CREATE_CLASSIFIER):
+	print('Creating classifier now. Sit tight!')
 	clf = createLinearClassifier(train_X, train_y)
 	print('Created classifier')
 else:
@@ -87,7 +69,14 @@ else:
 	print('Loaded classifier')
 
 
+print(test_X.shape)
+print(test_y.shape)
 ## Look at scores
+# scores = cross_vahttps://gfycat.com/BlandBarrenCoatil_score(clf, test_X, test_y, cv=25)
+# print("Accuracy: %0.2f (+/- %0.2f)" % (scores.mean(), scores.std() *2))
+
+cv_num = ShuffleSplit(n_splits = 3, test_size=0.3, random_state=0)
+crossValidationStuff(clf, test_X, test_y,cv_num)
 
 
 
