@@ -13,7 +13,7 @@ function [features]  = waveletFeatureExtractor(file)
     wname = 'db4';
     
     
-    
+   
     
     features = zeros(num_elec,5);
 %     labels= {};
@@ -21,12 +21,11 @@ function [features]  = waveletFeatureExtractor(file)
     for i = 1:num_elec
           %Read in the electrode data
         data_elec = data(i,:);
-        
+         
         [LoD,HiD,LoR,HiR] = wfilters(wname);
 
         filt = conv(data_elec,LoD);
         filt_D4 = conv(filt,HiD);
-
     %     fft after filter
         Y = fft(filt_D4);
         L = length(filt_D4);

@@ -2,11 +2,11 @@
 %% Prep data for 2D-DWT
 clear
 close all
-root ='/Users/graemecox/Documents/Capstone/Data/EEG_Data/';
-% root = '/Volumes/SeagateBackupPlusDrive/EEG_Data/SeizureDetectionData/'
+% root ='/Users/graemecox/Documents/Capstone/Data/EEG_Data/';
+root = '/Volumes/SeagateBackupPlusDrive/EEG_Data/SeizureDetectionData/'
 
 %% Initial script parameters
-WRITE_TXT = 0; %either write to text, or csv
+WRITE_TXT = 1; %either write to text, or csv
 % 0 for csv, 1 for text
 
 

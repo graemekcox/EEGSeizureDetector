@@ -12,7 +12,6 @@ def readCsv(fn, isHeader):
 	# Labels are in the first column, and features are in the other columns
 	#is header defines whetehr the columns have names or not
 
-
 	f = open(fn,'rb')
 	# f = open(sys.argv[1], 'rb')
 
@@ -28,8 +27,6 @@ def readCsv(fn, isHeader):
 		data= np.array(data)
 
 	f.close()
-
-
 
 	#Labels are in the first column
 	labels = data[:,0]
