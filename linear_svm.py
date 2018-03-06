@@ -1,3 +1,4 @@
+
 import sys
 
 sys.path.insert(0, '../PreprocessingFunctions')
@@ -10,46 +11,13 @@ from sklearn.model_selection import cross_val_score, train_test_split, ShuffleSp
 import cPickle
 import numpy as np 
 
-fn = '/Users/graemecox/Documents/Capstone/Code/eegSvm/labels.txt'
 UPDATE_FEAT = 1
 CREATE_CLASSIFIER = 1
 CLASSIFIER_NAME = 'savedClassifier.pkl'
 root = '/Users/graemecox/Documents/Capstone/Code/eegSvm/'
 
-# def readLabels(root):
-# 	# labels = f.read()
-# 	# For Labels
-# 	fn = root+ 'labels.txt'
-# 	labels = []
-# 	with open(fn) as f:
-# 		for line in f:
-# 			#Split each line by comma, then save as a list of floats
-# 			currentline = [float(x) for x in line.split(",")]
-# 			labels.append(currentline)
-# 	f.close()
-# 	labels = np.array(labels)
-# 	np.save('labels_py',labels)
-# 	return labels
-	
-
-# def readFeatures(root):
-# 	# For features
-# 	fn = root + 'features.txt'
-# 	fn = '/Users/graemecox/Documents/Capstone/Code/eegSvm/features.txt'
-
-# 	feat = []
-# 	with open(fn) as f:
-# 		for line in f:
-# 			currentline = [float(x) for x in line.split(",")]
-# 			feat.append(currentline)
-# 	f.close()
-# 	feat = np.array(feat)
-# 	np.save('feat_py',feat)
-# 	return feat
-
-
 def createLinearClassifier(X_train, y_train):
-
+  
 	model = svm.SVC(C=25, kernel='rbf',degree=1)
 
 	# Data stuff
@@ -69,13 +37,12 @@ def crossValidationStuff(model, X_test, y_test, cv_num):
 
 
 
-
-
 # If we want to load from the text file, or load from numpy
 if (UPDATE_FEAT):
 	# labels = readLabels(root)
 	# feat = readFeatures(root)
 	labels = readTextFile()
+
 	print("Read in labels and features")
 else:
 	labels = np.load('labels_py.npy')
@@ -110,6 +77,7 @@ print(test_y.shape)
 
 cv_num = ShuffleSplit(n_splits = 3, test_size=0.3, random_state=0)
 crossValidationStuff(clf, test_X, test_y,cv_num)
+
 
 
 
