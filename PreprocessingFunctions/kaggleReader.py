@@ -29,7 +29,7 @@ def printMatData(fn):
 
 	print(data.shape)
 
-root = '/Users/graemecox/Documents/Capstone/Data/EEG_Data/'
+# root = '/Users/graemecox/Documents/Capstone/Data/EEG_Data/'
 # root = '/Volumes/SeagateBackupPlusDrive/EEG_Data/SeizureDetectionData/'
 
 def getSubfolders(root):
@@ -43,7 +43,7 @@ def getSubfolders(root):
 
 
 
-def readKaggleDataset(root):
+def readKaggleDataset(root,saveFiles=0):
 	subfolders = getSubfolders(root)
 
 	interictal_clips = []
@@ -106,6 +106,14 @@ def readKaggleDataset(root):
 	print('Length of test clips is %d'% len(test_clips))
 
 	print('----------------Finished extracting features----------------')
+
+	if saveFiles:
+		np.save('Data/labels.npy', labels)
+		print('Saved labels as Data/labels.npy')
+		np.save('Data/features.npy', features)
+		print('Saved features as Data/features.npy')
+
+
 	return features, labels, test_clips
 
 
