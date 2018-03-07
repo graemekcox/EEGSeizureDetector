@@ -50,24 +50,24 @@ def fe_wavelet(fn):
 
 	## FFT  
 	sampling_freq = mat['freq']
-	latency = mat['latency']
+	# latency = mat['latency']
 
 	data = np.array(mat['data'])
 
-
+	#Get number of electrodes
 	num_elec = data.shape[0]
-	print(num_elec)
+
 	wname = 'db4';
 
 	w = pywt.Wavelet(wname)
-
-
 	features = []
 	for i in range(num_elec):
 		elec_data = data[i][:]
 
+		filt = np.convolve(elec_data, w.dec_lo)
+		filt_D4 = np.convolve(filt, w.dec_hi)
 
-		f_seiz = quickFFT(elec_data)
+		f_seiz = quickFFT(filt_D4)
 		# print(L)
 		# features = [][]
 		values = [mean(f_seiz[49:75]),
@@ -77,12 +77,45 @@ def fe_wavelet(fn):
 			mean(f_seiz[174:200])]
 
 		features.append(values)
-
+		# print(np.array(values).shape)
 
 
 	features = np.array(features)
-	print(features.shape)
 	return features
 
-fn = '/Users/graemecox/Documents/Capstone/Data/EEG_Data/Dog_1/Dog_1_ictal_segment_1.mat'
-fe_wavelet(fn)
+
+
+## Test stuff
+# test = np.empty((0,5), float)
+# test2 = fe_wavelet(fn)
+
+# test = np.append(test,test2, axis=0)
+# test = np.append(test,test2, axis=0)
+# print(test.shape)
+# print(np.concatenate(test,test2))
+
+# print(test.shape)
+
+
+# ## FFT  
+# sampling_freq = mat['freq']
+# latency = mat['latency']
+
+
+
+# num_elec = data.shape[0]
+
+# wname = 'db4';
+
+# w = pywt.Wavelet(wname)	
+# elec_data = data[0][:]
+
+
+# ##Should be final lenght 417. (assuming db4 and initial 400)
+
+# cA, cD = pywt.dwt(elec_data, wname)
+
+# print(len(cA))
+# print(cA[0])
+# print(cA[1])
+
