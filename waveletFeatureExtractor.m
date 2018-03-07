@@ -23,7 +23,9 @@ function [features]  = waveletFeatureExtractor(file)
         data_elec = data(i,:);
          
         [LoD,HiD,LoR,HiR] = wfilters(wname);
-
+        
+        [A, D ] = dwt(data_elec, LoD, HiD);
+        
         filt = conv(data_elec,LoD);
         filt_D4 = conv(filt,HiD);
     %     fft after filter
