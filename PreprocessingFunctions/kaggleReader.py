@@ -4,16 +4,23 @@ import scipy.io as spio
 
 fn = '/Users/graemecox/Documents/Capstone/Data/EEG_Data/Dog_1/Dog_1_ictal_segment_1.mat'
 
-mat = spio.loadmat(fn)
 
-print(mat['freq'])
-print(mat['latency'])
-print(np.array(mat['data']).shape)
+def printMatData(fn):
+	mat = spio.loadmat(fn)
 
-## Matlab structure fields:
-sampling_freq = mat['freq']
-latency = mat['latency']
+	print(mat['freq'])
+	print(mat['latency'])
+	print(np.array(mat['data']).shape)
 
-data = np.array(mat['data'])
+	## Matlab structure fields:
+	sampling_freq = mat['freq']
+	latency = mat['latency']
 
-print(data.shape)
+	data = np.array(mat['data'])
+
+	print(data.shape)
+
+
+root = '/Volumes/SeagateBackupPlusDrive/EEG_Data/SeizureDetectionData/'
+
+printMatData(fn)
