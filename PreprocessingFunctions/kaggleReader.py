@@ -1,8 +1,15 @@
 ##kaggle reader
+import sys
+sys.path.insert(0, '/Users/graemecox/Documents/Capstone/Code/eegSvm/Features')
+
+from fe_wavelet import *
+
 import numpy as np 
 import scipy.io as spio
 import os
 import glob
+
+
 
 fn = '/Users/graemecox/Documents/Capstone/Data/EEG_Data/Dog_1/Dog_1_ictal_segment_1.mat'
 
@@ -44,7 +51,14 @@ def readKaggleDataset(root):
 	test=[];
 	test_clips = []
 
+	labels = []
+	num_feat = 5
 
+	features = np.empty((0,num_feat), float)
+
+
+
+	print('----------------STARTING TO READ FROM SUBFOLDERS----------------')
 	for subfolder in subfolders:
 		# print(root+subfolder)
 		folder = root+subfolder
@@ -56,15 +70,46 @@ def readKaggleDataset(root):
 		for file in glob.glob(folder+'/*_ictal_*.mat'):
 			ictal_clips.append(file)
 
+			#Get features
+			temp_feat = fe_wavelet(file)
+
+			#Append labels to labels list
+			temp_size = temp_feat.shape[0]
+			temp_labels = np.empty((temp_size,), int)
+			temp_labels[0:temp_size] = -1 #Ictal is -1
+
+			# Append features and labels
+			labels = np.append(labels, temp_labels, axis=0)
+			features = np.append(features, temp_feat, axis=0)
+
+
 		for file in glob.glob(folder+'/*_interictal_*.mat'):
 			interictal_clips.append(file)
 
+			#Get features
+			temp_feat = fe_wavelet(file)
+
+			#Append labels to labels list
+			temp_size = temp_feat.shape[0]
+			temp_labels = np.empty((temp_size,), int)
+			temp_labels[0:temp_size] = 1 #Interictal is 1
+
+			# Append features and labels
+			labels = np.append(labels, temp_labels, axis=0)
+			features = np.append(features, temp_feat, axis=0)
+
 		for file in glob.glob(folder+'/*_test_*.mat'):
 			test_clips.append(file)
-
 
 	print('Length of interictal clips is %d'% len(interictal_clips))
 	print('Length of ictal clips is %d'% len(ictal_clips))
 	print('Length of test clips is %d'% len(test_clips))
 
-readKaggleDataset(root)
+	print('----------------Finished extracting features----------------')
+	return features, labels, test_clips
+
+
+# features, labels, test_clips = readKaggleDataset(root)
+
+# print('Number of features: %d\nRows of features: %d' % (features.shape[1],features.shape[0]))
+# print('Number of labels: %d\n' % len(features))
