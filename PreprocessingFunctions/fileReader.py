@@ -3,11 +3,11 @@ import numpy as np
 import csv
 
 
-fn= 'testData.csv'
+# fn= 'testData.csv'
 
 
 
-def readCsv(fn, isHeader):
+def readCsv(fn, hasHeader=0):
 	##Reads in .csv specified in input, and outputs labels and features
 	# Labels are in the first column, and features are in the other columns
 	#is header defines whetehr the columns have names or not
@@ -15,7 +15,7 @@ def readCsv(fn, isHeader):
 	f = open(fn,'rb')
 	# f = open(sys.argv[1], 'rb')
 
-	if (isHeader):
+	if (hasHeader):
 
 		print("Don't know what the header looks like")
 
@@ -61,14 +61,14 @@ def readTextFile(fn,saveFile=0, saveName=None):
 
 	return data
 
-lab, feat = readCsv(fn,0)
+# lab, feat = readCsv(fn,0)
 
-print(lab.shape)
-print(feat.shape)
+# print(lab.shape)
+# print(feat.shape)
 
 
-fn = '/Users/graemecox/Documents/Capstone/Code/eegSvm/labels.txt'
-data = readTextFile(fn,1,'test')
+# fn = '/Users/graemecox/Documents/Capstone/Code/eegSvm/labels.txt'
+# data = readTextFile(fn,1,'test')
 
-print(data.shape)
+# print(data.shape)
 
