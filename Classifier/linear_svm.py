@@ -8,6 +8,9 @@ from fileReader import *
 from sklearn import datasets, svm, metrics
 from sklearn.feature_extraction.text import CountVectorizer
 from sklearn.model_selection import cross_val_score, train_test_split, ShuffleSplit
+from sklearn.neural_network import MLPClassifier 
+# from sklearn.tree import DecisionTreeClassifier
+from sklearn import tree
 import cPickle
 import numpy as np 
 
@@ -15,7 +18,18 @@ import numpy as np
 # UPDATE_FEAT = 1
 # CREATE_CLASSIFIER = 1
 CLASSIFIER_NAME = 'savedClassifier.pkl'
+
+CLASSIFIERS = [
+	svm.SVC(kernel='linear', C=0.035),
+	tree.DecisionTreeClassifier(max_depth=5)
+	# tree.DecisionTreeClassifier(max_depth=5, n_estimators=10, max_features=1)
+	]
 # root = '/Users/graemecox/Documents/Capstone/Code/eegSvm/'
+CLASSIFIER_NAME = [
+	'SVM',
+	'Decision Tree Classifier'
+]
+
 
 
 def createLinearClassifier(X_train, y_train,save=0):
@@ -42,7 +56,30 @@ def crossValidationStuff(model, X_test, y_test, cv_num):
 
 
 
+def train_multiple_classifiers(X_train, y_train, X_test, y_test, save=0):
+	model  = []
+	scores = []
+	for i in range(len(CLASSIFIERS)):
+		
+		temp_model = CLASSIFIERS[i]
+		print('%%%%%%%%%%%%Classifier %d: %s' % ((1+i),CLASSIFIER_NAME[i]))
 
+		temp_model.fit(X_train, y_train)
+		scores.append(temp_model.score(X_test,y_test))
+
+		print('Score: %f' % scores[i])
+
+	print(scores)
+
+labels = np.load('../Data/labels.npy')
+feat = np.load('../Data/features.npy')
+X_train, X_test, y_train, y_test = train_test_split(
+feat, labels, test_size=0.2, random_state=0)
+
+train_multiple_classifiers(X_train, y_train, X_test, y_test,0)
+
+
+	#RBF, AdaVB, SVM, 
 
 # # If we want to load from the text file, or load from numpy
 # if (UPDATE_FEAT):
