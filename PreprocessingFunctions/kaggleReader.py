@@ -3,6 +3,7 @@ import sys
 sys.path.insert(0, '/Users/graemecox/Documents/Capstone/Code/eegSvm/Features')
 
 from fe_wavelet import *
+from fe_bandpower import *
 
 import numpy as np 
 import scipy.io as spio
@@ -52,7 +53,7 @@ def readKaggleDataset(root,saveFiles=0):
 	test_clips = []
 
 	labels = []
-	num_feat = 5
+	num_feat = 10
 
 	features = np.empty((0,num_feat), float)
 
@@ -71,7 +72,11 @@ def readKaggleDataset(root,saveFiles=0):
 			ictal_clips.append(file)
 
 			#Get features
-			temp_feat = fe_wavelet(file)
+			# temp_feat = fe_wavelet(file)
+			temp_wav = fe_wavelet(file)
+
+			temp_amp = fe_meanAmp(file)
+			temp_feat = np.concatenate((temp_wav, temp_amp), axis=1)
 
 			#Append labels to labels list
 			temp_size = temp_feat.shape[0]
@@ -87,7 +92,10 @@ def readKaggleDataset(root,saveFiles=0):
 			interictal_clips.append(file)
 
 			#Get features
-			temp_feat = fe_wavelet(file)
+			# temp_feat = fe_wavelet(file)
+			temp_wav = fe_wavelet(file) 
+			temp_amp = fe_meanAmp(file)
+			temp_feat = np.concatenate((temp_wav, temp_amp), axis=1)
 
 			#Append labels to labels list
 			temp_size = temp_feat.shape[0]
