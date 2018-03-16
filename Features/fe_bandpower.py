@@ -56,10 +56,33 @@ def fe_meanAmp(fn):
 	# for i in range(num_elec):
 		# elec_data = data[i][:]
 
+def fe_freqbandmean(data, Fs):
+		amps=np.absolute(np.fft.rfft(data))
+		freqs = np.fft.rfftfreq(len(data),1.0/Fs)
 
-fn = '/Users/graemecox/Documents/Capstone/Data/EEG_Data/Dog_1/Dog_1_ictal_segment_1.mat'
+		# Take the mean of the fft amplitude for each EEG band
+		temp_band = dict()
+		for band in freq_bands:  
+			#Find all indexs that belong to each EEG frequency band
+		    i = np.where((freqs >= freq_bands[band][0]) & 
+		                       (freqs <= freq_bands[band][1]))[0]
+		    temp_band[band] = np.mean(amps[i])
 
-features = fe_meanAmp(fn)
+		# print(L)
+		# features = [][]
+		values = [temp_band['Delta'],
+			temp_band['Theta'],
+			temp_band['Alpha'],
+			temp_band['Beta'],
+			temp_band['Gamma']]
+
+		return values
+
+
+
+# fn = '/Users/graemecox/Documents/Capstone/Data/EEG_Data/Dog_1/Dog_1_ictal_segment_1.mat'
+
+# features = fe_meanAmp(fn)
 
 # mat = spio.loadmat(fn)
 
