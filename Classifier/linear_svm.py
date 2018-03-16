@@ -81,60 +81,12 @@ def train_multiple_classifiers(X_train, y_train, X_test, y_test, save=0):
 	print('------------ FINISHED -----------')
 	return scores
 
-labels = np.load('../Data/labels.npy')
-feat = np.load('../Data/features.npy')
-X_train, X_test, y_train, y_test = train_test_split(
-feat, labels, test_size=0.2, random_state=0)
+# labels = np.load('../Data/labels.npy')
+# feat = np.load('../Data/features.npy')
+# X_train, X_test, y_train, y_test = train_test_split(
+# feat, labels, test_size=0.2, random_state=0)
 
-scores = train_multiple_classifiers(X_train, y_train, X_test, y_test,0)
-scores = np.array(scores)
-print('Classifier With the Highest Score: %s \nScore was: %s' % 
-	(CLASSIFIERS[scores.argmax()], scores[scores.argmax()]))
-
-	#RBF, AdaVB, SVM, 
-
-# # If we want to load from the text file, or load from numpy
-# if (UPDATE_FEAT):
-# 	# labels = readLabels(root)
-# 	# feat = readFeatures(root)
-# 	labels,feat = readCsv('../Data/features.csv',0)
-
-# 	# labels = readTextFile('Data/labels.txt',1, 'labels_npy')
-# 	# labels = readTextFile('Data/labels.txt',1, 'features_npy')
-# 	print("Read in labels and features")
-# else:
-# 	labels = np.load('Data/labels_py.npy')
-# 	feat = np.load('Data/feat_py.npy')
-# 	print("Loaded labels and features")
-
-
-# train_X, test_X, train_y, test_y = train_test_split(
-# 	feat, labels, test_size=0.2, random_state=0)
-
-# ## If data is not 1D array
-# # c,r = train_y.shape
-# # train_y = train_y.reshape(c,)
-# # c,r = test_y.shape
-# # test_y = test_y.reshape(c,)
-
-# # Create or load classifier
-
-# if (CREATE_CLASSIFIER):
-# 	print('Creating classifier now. Sit tight!')
-# 	clf = createLinearClassifier(train_X, train_y)
-# 	print('Created classifier')
-# else:
-# 	with open(CLASSIFIER_NAME,'rb') as fid:
-# 		clf = cPickle.load(fid)
-# 	print('Loaded classifier')
-
-
-# print(test_X.shape)
-# print(test_y.shape)
-# ## Look at scores
-# # scores = cross_vahttps://gfycat.com/BlandBarrenCoatil_score(clf, test_X, test_y, cv=25)
-# # print("Accuracy: %0.2f (+/- %0.2f)" % (scores.mean(), scores.std() *2))
-
-# cv_num = ShuffleSplit(n_splits = 3, test_size=0.3, random_state=0)
-# crossValidationStuff(clf, test_X, test_y,cv_num)
-
+# scores = train_multiple_classifiers(X_train, y_train, X_test, y_test,0)
+# scores = np.array(scores)
+# print('Classifier With the Highest Score: %s \nScore was: %s' % 
+# 	(CLASSIFIERS[scores.argmax()], scores[scores.argmax()]))
