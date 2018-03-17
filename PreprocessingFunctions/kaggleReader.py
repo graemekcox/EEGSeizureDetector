@@ -68,7 +68,11 @@ def returnFeatures(fn):
 		features = np.append(features,temp_features,axis=0)
 	return features
 
-
+def returnLabels(feat, label):
+	temp_size = feat.shape[0]
+	labels = np.empty((temp_size,), int)
+	labels[0:temp_size] = label #Ictal is -1
+	return labels
 
 
 
@@ -98,17 +102,9 @@ def readKaggleDataset(root,saveFiles=0):
 			ictal_clips.append(file)
 
 			#Get features
-			# temp_feat = fe_wavelet(file)
-			# temp_wav = fe_wavelet(file)
 			temp_feat = returnFeatures(file)
-
-			# temp_feat = fe_meanAmp(file)
-			# temp_feat = np.concatenate((temp_wav, temp_amp), axis=1)
-
+			temp_labels = returnLabels(temp_feat, -1)
 			#Append labels to labels list
-			temp_size = temp_feat.shape[0]
-			temp_labels = np.empty((temp_size,), int)
-			temp_labels[0:temp_size] = -1 #Ictal is -1
 
 			# Append features and labels
 			labels = np.append(labels, temp_labels, axis=0)
@@ -120,16 +116,9 @@ def readKaggleDataset(root,saveFiles=0):
 			interictal_clips.append(file)
 
 			#Get features
-			# temp_feat = fe_wavelet(file)
-			# temp_wav = fe_wavelet(file) 
-			# temp_feat = fe_meanAmp(file)
-			temp_feat = returnFeatures(file)
-			# temp_feat = np.concatenate((temp_wav, temp_amp), axis=1)
 
-			#Append labels to labels list
-			temp_size = temp_feat.shape[0]
-			temp_labels = np.empty((temp_size,), int)
-			temp_labels[0:temp_size] = 1 #Interictal is 1
+			temp_feat = returnFeatures(file)
+			temp_labels = returnLabels(temp_feat,1)
 
 			# Append features and labels
 			labels = np.append(labels, temp_labels, axis=0)
