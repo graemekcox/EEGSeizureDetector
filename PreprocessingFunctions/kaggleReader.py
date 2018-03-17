@@ -12,8 +12,8 @@ import glob
 
 
 
-fn = '/Users/graemecox/Documents/Capstone/Data/EEG_Data/Dog_1/Dog_1_ictal_segment_1.mat'
-
+# fn = '/Users/graemecox/Documents/Capstone/Data/EEG_Data/Dog_1/Dog_1_ictal_segment_1.mat'
+num_feat = 5
 
 def printMatData(fn):
 	mat = spio.loadmat(fn)
@@ -44,6 +44,34 @@ def getSubfolders(root):
 
 
 
+def returnFeatures(fn):
+
+	mat = spio.loadmat(fn)
+
+	Fs = mat['freq']
+	data = np.array(mat['data'])
+
+	num_elec = data.shape[0]
+
+	features = np.empty((0,num_feat))
+
+	for i in range(num_elec):
+		elec_data = data[i][:]
+
+		# meanamp = fe_freqbandmean(elec_data,Fs)
+		# w_db4 = fe_waveletdecomp(elec_data)
+		temp_features = fe_waveletdecomp(elec_data)
+		# append all features vertically
+		# temp_features = np.concatenate((meanamp,w_db4), axis=1)
+		
+		#Append new features to next row in feature list
+		features = np.append(features,temp_features,axis=0)
+	return features
+
+
+
+
+
 def readKaggleDataset(root,saveFiles=0):
 	subfolders = getSubfolders(root)
 
@@ -53,11 +81,9 @@ def readKaggleDataset(root,saveFiles=0):
 	test_clips = []
 
 	labels = []
-	num_feat = 10
+	# num_feat = 10
 
 	features = np.empty((0,num_feat), float)
-
-
 
 	print('----------------STARTING TO READ FROM SUBFOLDERS----------------')
 	for subfolder in subfolders:
@@ -73,10 +99,11 @@ def readKaggleDataset(root,saveFiles=0):
 
 			#Get features
 			# temp_feat = fe_wavelet(file)
-			temp_wav = fe_wavelet(file)
+			# temp_wav = fe_wavelet(file)
+			temp_feat = returnFeatures(file)
 
-			temp_amp = fe_meanAmp(file)
-			temp_feat = np.concatenate((temp_wav, temp_amp), axis=1)
+			# temp_feat = fe_meanAmp(file)
+			# temp_feat = np.concatenate((temp_wav, temp_amp), axis=1)
 
 			#Append labels to labels list
 			temp_size = temp_feat.shape[0]
@@ -88,14 +115,16 @@ def readKaggleDataset(root,saveFiles=0):
 			features = np.append(features, temp_feat, axis=0)
 
 
+
 		for file in glob.glob(folder+'/*_interictal_*.mat'):
 			interictal_clips.append(file)
 
 			#Get features
 			# temp_feat = fe_wavelet(file)
-			temp_wav = fe_wavelet(file) 
-			temp_amp = fe_meanAmp(file)
-			temp_feat = np.concatenate((temp_wav, temp_amp), axis=1)
+			# temp_wav = fe_wavelet(file) 
+			# temp_feat = fe_meanAmp(file)
+			temp_feat = returnFeatures(file)
+			# temp_feat = np.concatenate((temp_wav, temp_amp), axis=1)
 
 			#Append labels to labels list
 			temp_size = temp_feat.shape[0]
