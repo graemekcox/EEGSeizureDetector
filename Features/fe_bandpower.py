@@ -76,18 +76,49 @@ def fe_freqbandmean(data, Fs):
 			temp_band['Beta'],
 			temp_band['Gamma']]
 
-		return values
 
+
+		return np.reshape(np.array(values),(-1,5)) #Make sure we return a 2d array, not 1d
+
+def fe_spectralratio(data,Fs):
+		amps=np.absolute(np.fft.rfft(data))
+		freqs = np.fft.rfftfreq(len(data),1.0/Fs)
+
+		# Take the mean of the fft amplitude for each EEG band
+		temp_band = dict()
+		for band in freq_bands:  
+			#Find all indexs that belong to each EEG frequency band
+		    i = np.where((freqs >= freq_bands[band][0]) & 
+		                       (freqs <= freq_bands[band][1]))[0]
+		    temp_band[band] = np.mean(amps[i])
+
+		# print(L)
+		# features = [][]
+		values = [temp_band['Delta'],
+			temp_band['Theta'],
+			temp_band['Alpha'],
+			temp_band['Beta'],
+			temp_band['Gamma']]
+
+
+		# Get rid of all NaN values in array
+		values = np.array(values)
+		values[np.isnan(values)] = 0
+
+		return np.reshape(values,(-1,5)) #Make sure we return a 2d array, not 1d
 
 
 # fn = '/Users/graemecox/Documents/Capstone/Data/EEG_Data/Dog_1/Dog_1_ictal_segment_1.mat'
 
-# features = fe_meanAmp(fn)
+# # features = fe_meanAmp(fn)
 
 # mat = spio.loadmat(fn)
 
 # Fs = mat['freq']
 # data = np.array(mat['data'])
+
+
+# fe_spectralratio(data, Fs)
 
 # num_elec = data.shape[0]
 # elec_data = data[0][:]
