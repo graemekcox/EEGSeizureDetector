@@ -81,6 +81,12 @@ def fe_freqbandmean(data, Fs):
 		return np.reshape(np.array(values),(-1,5)) #Make sure we return a 2d array, not 1d
 
 def fe_spectralratio(data,Fs):
+		"""
+		Returns ratio of mean frequencies of all data
+
+
+		"""
+
 		amps=np.absolute(np.fft.rfft(data))
 		freqs = np.fft.rfftfreq(len(data),1.0/Fs)
 
