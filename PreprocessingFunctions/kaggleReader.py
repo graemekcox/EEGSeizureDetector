@@ -30,9 +30,6 @@ def printMatData(fn):
 
 	print(data.shape)
 
-# root = '/Users/graemecox/Documents/Capstone/Data/EEG_Data/'
-# root = '/Volumes/SeagateBackupPlusDrive/EEG_Data/SeizureDetectionData/'
-
 def getSubfolders(root):
 	subfolders = os.listdir(root)
 	subfolders.remove('.DS_Store')
@@ -60,12 +57,17 @@ def returnFeatures(fn):
 
 		# meanamp = fe_freqbandmean(elec_data,Fs)
 		# w_db4 = fe_waveletdecomp(elec_data)
-		temp_features = fe_waveletdecomp(elec_data)
+		# temp_features = fe_waveletdecomp(elec_data)
+		temp_features = fe_freqbandmean(elec_data,Fs)
+		# temp_features = fe_spectralratio(elec_data,Fs)
+
+
 		# append all features vertically
 		# temp_features = np.concatenate((meanamp,w_db4), axis=1)
 		
 		#Append new features to next row in feature list
 		features = np.append(features,temp_features,axis=0)
+
 	return features
 
 def returnLabels(feat, label):
@@ -142,8 +144,3 @@ def readKaggleDataset(root,saveFiles=0):
 
 	return features, labels, test_clips
 
-
-# features, labels, test_clips = readKaggleDataset(root)
-
-# print('Number of features: %d\nRows of features: %d' % (features.shape[1],features.shape[0]))
-# print('Number of labels: %d\n' % len(features))

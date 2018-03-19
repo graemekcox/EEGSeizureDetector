@@ -94,63 +94,29 @@ def fe_spectralratio(data,Fs):
 
 		# print(L)
 		# features = [][]
-		values = [temp_band['Delta'],
+		band_mean = [temp_band['Delta'],
 			temp_band['Theta'],
 			temp_band['Alpha'],
 			temp_band['Beta'],
 			temp_band['Gamma']]
 
 
+		values= np.empty(len(band_mean)**2,)
+		count = 0
+
+
+		band_mean= np.array(band_mean)
+		band_mean[np.isnan(band_mean)] = 0
+
+		for i in range(len(band_mean)):
+			
+			for j in range(len(band_mean)):	
+				# if band_mean[j] == 0:
+					# values[count] = 
+				values[count] = band_mean[i]/band_mean[j]
+				count = count+1
 		# Get rid of all NaN values in array
-		values = np.array(values)
-		values[np.isnan(values)] = 0
-
-		return np.reshape(values,(-1,5)) #Make sure we return a 2d array, not 1d
 
 
-# fn = '/Users/graemecox/Documents/Capstone/Data/EEG_Data/Dog_1/Dog_1_ictal_segment_1.mat'
+		return np.reshape(values,(-1,25)) #Make sure we return a 2d array, not 1d
 
-# # features = fe_meanAmp(fn)
-
-# mat = spio.loadmat(fn)
-
-# Fs = mat['freq']
-# data = np.array(mat['data'])
-
-
-# fe_spectralratio(data, Fs)
-
-# num_elec = data.shape[0]
-# elec_data = data[0][:]
-
-
-
-# eeg_band_fft = dict()
-
-# fft_vals=np.absolute(np.fft.rfft(elec_data))
-# fft_freq = np.fft.rfftfreq(len(elec_data),1.0/Fs)
-
-# print(len(fft_freq))
-# print(fft_freq[100])
-
-# # Take the mean of the fft amplitude for each EEG band
-# eeg_band_fft = dict()
-# for band in freq_bands:  
-#     freq_ix = np.where((fft_freq >= freq_bands[band][0]) & 
-#                        (fft_freq <= freq_bands[band][1]))[0]
-#     eeg_band_fft[band] = np.mean(fft_vals[freq_ix])
-
-# # Plot the data (using pandas here cause it's easy)
-# print(eeg_band_fft)
-# print(eeg_band_fft['Theta'])
-
-## Plotting spectrum
-# fft1 = scipy.fft(elec_data)
-
-# f = np.linspace(0,Fs,len(elec_data), endpoint=False)
-# print(len(fft1))
-# plt.figure(1)
-# plt.plot(f, abs(fft1))
-# plt.title('Mag')
-# plt.xlabel('Frequency(Hz)')
-# show()
