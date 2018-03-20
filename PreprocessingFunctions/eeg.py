@@ -26,7 +26,8 @@ class EEG_Sample:
 		else:
 		 	self.label = 0 # for test data. 
 
-
+	def setData(self, new_data):
+		self.data = new_data
 
 	def plotTimeSeries(self, elecNum):
 		if (elecNum > self.numElec):
@@ -62,9 +63,7 @@ class EEG_Sample:
 	# def addNoise(data):
 
 
-# fn = '/Users/graemecox/Documents/Capstone/Data/EEG_Data/Dog_1/Dog_1_ictal_segment_1.mat'
-
-# test = EEG_Sample(fn)
+	
 # print(test.subject)
 # test.plotFourierSeries(60)
 # test.plotTimeSeries(17)
