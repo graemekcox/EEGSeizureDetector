@@ -57,8 +57,8 @@ def returnFeatures(fn):
 
 		# meanamp = fe_freqbandmean(elec_data,Fs)
 		# w_db4 = fe_waveletdecomp(elec_data)
-		# temp_features = fe_waveletdecomp(elec_data)
-		temp_features = fe_freqbandmean(elec_data,Fs)
+		temp_features = fe_waveletdecomp(elec_data)
+		# temp_features = fe_freqbandmean(elec_data,Fs)
 		# temp_features = fe_spectralratio(elec_data,Fs)
 
 
