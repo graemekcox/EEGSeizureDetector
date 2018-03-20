@@ -10,41 +10,6 @@ def crossValidationStuff(model, X_test, y_test, cv_num):
 	print("Accuracy: %0.5f (+/- %0.5f)" % (scores.mean(), scores.std() *2))
 	return scores
 
-# def computeROC(X_test,y_test, y_score):
-# 	"""
-# 		Function to help find the false-positive and false-negative rates
-# 	"""
-# 	# n_classes= 2 # seizure, no-seizure
-# 	n_classes = y_test.shape
-# 	print(n_classes)
-# 	fpr = dict()
-# 	tpr = dict()
-# 	roc_auc = dict()
-# 	# for i in range(n_classes):
-# 		# fpr[i], tpr[i], _ = roc_curve(y_test[:,i], y_score[i])
-# 		# roc_auc[i] = auc(fpr[i],tpr[i])
-
-# 	fpr["micro"], tpr["micro"], _ = roc_curve(y_test.ravel(), y_score.ravel())
-# 	roc_auc["micro"] = auc(fpr["micro"], tpr["micro"])
-
-# 	plt.figure()
-# 	lw = 2
-# 	plt.plot(fpr[2], tpr[2], color='darkorange',
-# 	         lw=lw, label='ROC curve (area = %0.2f)' % roc_auc[2])
-# 	plt.plot([0, 1], [0, 1], color='navy', lw=lw, linestyle='--')
-# 	plt.xlim([0.0, 1.0])
-# 	plt.ylim([0.0, 1.05])
-# 	plt.xlabel('False Positive Rate')
-# 	plt.ylabel('True Positive Rate')
-# 	plt.title('Receiver operating characteristic example')
-# 	plt.legend(loc="lower right")
-# 	plt.show()
-
-# def plotROC(fpr, tpr):
-# 	print(fpr)
-
-
-
 
 def computeStats(model, X_test, y_train, y_test,cv = 5):
 
@@ -61,3 +26,27 @@ def classifierStats(clf, X_test, y_test):
 	print('----- Printing Classification Report ----- \n%s'%metrics.classification_report(y_test, pred, target_names=['Ictal','Interictal']))
 	print('----- Confusion Matrix ------\n%s'%metrics.confusion_matrix(y_test, pred))
 
+
+def scoreUsingKaggle(fn_list):
+
+	"""
+	Score test data to input to kaggle to get a proper score.
+
+	"""
+
+	test_size = len(fn_list)
+
+def getConfusionMatrix(results, expected):
+	tn,fp,fn,tp = sklearn.metrics.confusion_matrix(expected,results).ravel()
+	# print (tn,fp,fn,tp)
+	print('True Postivies: %f\t False Positives: %f\n' % (tp,fp))
+	print('True Negatives: %f\t False Negatives: %f\n' % (tn,fn))
+	tp = float(tp)
+	tn = float(tn)
+	print(tp)
+	print(tn)
+	specificity = tn/(tn+fp)
+	print (specificity)
+	selectivity = tp/(tp+fn)
+	print ('The specificity is %f and the selectivity is %f',specificity,selectivity)
+	return specificity,selectivity
