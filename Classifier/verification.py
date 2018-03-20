@@ -25,20 +25,21 @@ def classifierStats(clf, X_test, y_test):
 
 	print('----- Printing Classification Report ----- \n%s'%metrics.classification_report(y_test, pred, target_names=['Ictal','Interictal']))
 	
+	print('----- Confusion Matrix -----')
 
-	print('----- Confusion Matrix ------\n%s'%metrics.confusion_matrix(y_test, pred))
+	# print('----- Confusion Matrix ------\n%s'%metrics.confusion_matrix(y_test, pred))
 
 	tn,fp,fn,tp = metrics.confusion_matrix(y_test,pred).ravel()
 	print('True Postivies: %f\t False Positives: %f\n' % (tp,fp))
 	print('True Negatives: %f\t False Negatives: %f\n' % (tn,fn))
 	tp = float(tp)
 	tn = float(tn)
-	print(tp)
-	print(tn)
+	# print(tp)
+	# print(tn)
 	specificity = tn/(tn+fp)
-	print (specificity)
+	# print (specificity)
 	selectivity = tp/(tp+fn)
-	print ('The specificity is %f and the selectivity is %f',specificity,selectivity)
+	print ('The specificity is %f and the selectivity is %f' % (specificity,selectivity))
 	return specificity,selectivity
 
 def scoreUsingKaggle(fn_list):
@@ -50,17 +51,3 @@ def scoreUsingKaggle(fn_list):
 
 	test_size = len(fn_list)
 
-def getConfusionMatrix(results, expected):
-	tn,fp,fn,tp = metrics.confusion_matrix(expected,results).ravel()
-	# print (tn,fp,fn,tp)
-	print('True Postivies: %f\t False Positives: %f\n' % (tp,fp))
-	print('True Negatives: %f\t False Negatives: %f\n' % (tn,fn))
-	tp = float(tp)
-	tn = float(tn)
-	print(tp)
-	print(tn)
-	specificity = tn/(tn+fp)
-	print (specificity)
-	selectivity = tp/(tp+fn)
-	print ('The specificity is %f and the selectivity is %f',specificity,selectivity)
-	return specificity,selectivity
