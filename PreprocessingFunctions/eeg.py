@@ -1,6 +1,7 @@
 import numpy as np
 import scipy.io as spio
 import matplotlib.pyplot as plt
+import os
 
 
 
@@ -14,7 +15,8 @@ class EEG_Sample:
 		self.latency = mat['latency'] #doesn't show up in test data
 		self.data = mat['data']
 		self.numElec = self.data.shape[0]
-
+		tempFolder = np.array(fn.split('/'))
+		self.subject = tempFolder[len(tempFolder) - 2] #Specifies which subject the data is from
 
 		# self.label = 
 		if (-1 != path.find('_ictal_')):
@@ -27,6 +29,10 @@ class EEG_Sample:
 
 
 	def plotTimeSeries(self, elecNum):
+		if (elecNum > self.numElec):
+			print('Electrode number not valid for this dataset')
+			return
+
 		elec_data = self.data[elecNum-1][:]
 		t = np.arange(len(elec_data)) * (1/self.Fs)
 
@@ -37,11 +43,28 @@ class EEG_Sample:
 		plt.show()
 
 
+	def plotFourierSeries(self, elecNum):
+		if (elecNum > self.numElec):
+			print('Electrode number not valid for this dataset')
+			return
+		elec_data = self.data[elecNum-1]
+		mag = np.absolute(np.fft.rfft(elec_data))
+
+		freqs = np.fft.rfftfreq(len(elec_data), 1.0/self.Fs)
+
+		plt.plot(freqs,mag)
+		plt.xlabel('Frequency (Hz)')
+		plt.ylabel('Magnitude')
+		plt.title('Fourier Series of Electrode #%d' % elecNum)
+		plt.show()
+
+
 	# def addNoise(data):
 
 
-fn = '/Users/graemecox/Documents/Capstone/Data/EEG_Data/Dog_1/Dog_1_ictal_segment_1.mat'
+# fn = '/Users/graemecox/Documents/Capstone/Data/EEG_Data/Dog_1/Dog_1_ictal_segment_1.mat'
 
-test = EEG_Sample(fn)
-
-test.plotTimeSeries(5)
+# test = EEG_Sample(fn)
+# print(test.subject)
+# test.plotFourierSeries(60)
+# test.plotTimeSeries(17)

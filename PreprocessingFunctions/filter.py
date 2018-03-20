@@ -7,26 +7,6 @@ import scipy
 from pylab import *
 
 
-def plotTimeSeries(data,Fs):
-	t = np.arange(len(data)) * (1/Fs)
-
-	plt.plot(t,data)
-	plt.xlabel('Time (s)')
-	plt.ylabel('Voltage (mV)')
-	plt.show()
-# def addNoise(data):
-
-
-def plotFourierSeries(data, Fs):
-	mag = np.absolute(np.fft.rfft(data))
-
-	freqs = np.fft.rfftfreq(len(data), 1.0/Fs)
-
-	plt.plot(freqs,mag)
-	plt.xlabel('Frequency (Hz)')
-	plt.ylabel('Magnitude')
-	plt.show()
-
 
 def addNoise(data):
 	maxNoise = 10 # mV
