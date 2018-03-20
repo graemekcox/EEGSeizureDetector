@@ -12,20 +12,24 @@ class EEG_Sample:
 
 		mat = spio.loadmat(path)
 		self.Fs = mat['freq']
-		self.latency = mat['latency'] #doesn't show up in test data
 		self.data = mat['data']
 		self.numElec = self.data.shape[0]
-		tempFolder = np.array(fn.split('/'))
+		tempFolder = np.array(path.split('/'))
 		self.subject = tempFolder[len(tempFolder) - 2] #Specifies which subject the data is from
 
 		# self.label = 
 		if (-1 != path.find('_ictal_')):
-			self.label = -1
+			self.label = 0
+
+			self.latency = -1
 		elif (-1 != path.find('_interictal_')):
 			self.label = 1
-		else:
-		 	self.label = 0 # for test data. 
 
+			self.latency = -1
+		else:
+		 	self.label = -1 # for test data. 
+
+			self.latency = -1
 	def setData(self, new_data):
 		self.data = new_data
 
@@ -63,7 +67,7 @@ class EEG_Sample:
 	# def addNoise(data):
 
 
-	
+
 # print(test.subject)
 # test.plotFourierSeries(60)
 # test.plotTimeSeries(17)

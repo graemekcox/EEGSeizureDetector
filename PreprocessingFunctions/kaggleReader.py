@@ -20,6 +20,12 @@ import glob
 # fn = '/Users/graemecox/Documents/Capstone/Data/EEG_Data/Dog_1/Dog_1_ictal_segment_1.mat'
 num_feat = 5
 
+def saveFiles(labels, features):
+	np.save('Data/labels.npy', labels)
+	print('Saved labels as Data/labels.npy')
+	np.save('Data/features.npy', features)
+	print('Saved features as Data/features.npy')
+
 def printMatData(fn):
 	mat = spio.loadmat(fn)
 
@@ -83,7 +89,7 @@ def returnLabels(feat, label):
 
 
 
-def readKaggleDataset(root,saveFiles=0):
+def readKaggleDataset(root, save=0):
 	subfolders = getSubfolders(root)
 
 	interictal_clips = []
@@ -110,7 +116,7 @@ def readKaggleDataset(root,saveFiles=0):
 
 			#Get features
 			temp_feat = returnFeatures(file)
-			temp_labels = returnLabels(temp_feat, -1)
+			temp_labels = returnLabels(temp_feat, 0)
 			#Append labels to labels list
 
 			# Append features and labels
@@ -140,8 +146,8 @@ def readKaggleDataset(root,saveFiles=0):
 
 	print('----------------Finished extracting features----------------')
 
-	if saveFiles:
-		saveFiles()
+	if save:
+		saveFiles(labels, features)
 		# np.save('Data/labels.npy', labels)
 		# print('Saved labels as Data/labels.npy')
 		# np.save('Data/features.npy', features)
@@ -160,7 +166,6 @@ def returnEEGSubjects(root):
 
 	fns = np.array(0,)
 	# num_feat = 10
-
 	features = np.empty((0,num_feat), float)
 
 	print('------Starting to read from subfolders ------')
@@ -182,18 +187,19 @@ def returnEEGSubjects(root):
 
 	print('%d number of EEG Samples' % len(eegList))
 
-	np.save('/Users/graemecox/Documents/Capstone/Data/eeg_samples',eegList)
+	np.save('/Users/graemecox/Documents/Capstone/Code/eegSvm/Data/eeg_samples',eegList)
 	return eegList
 
-def getFeaturesForEEGSample(eegSamples, savelFiles=0):
+def getFeaturesForEEGSample(eegSamples, save=0):
 	
 	labels = np.array([])
-	num_feat = 1
+	num_feat = 8
 
 	features = np.empty((0,num_feat))
 	temp_label = np.empty((1,),int)
 
 	print('----- Starting to read from samples -----')
+	print('Using kurtosis')
 	for eeg in eegSamples:
 	
 		temp_data = eeg.data
@@ -205,9 +211,21 @@ def getFeaturesForEEGSample(eegSamples, savelFiles=0):
 			elec_data = temp_data[i][:]
 
 
-			# temp_feat = fe_waveletdecomp(elec_data)
-			temp_feat = fe_skewness(elec_data)
+			temp_wav = fe_waveletdecomp(elec_data)
+			# print(temp_feat.shape)
+			temp_skew = fe_skewness(elec_data)
+			temp_kurt = fe_kurtosis(elec_data)
+			temp_var = fe_variance(elec_data)
+			# # temp_feat = fe_kurtosis(elec_data)
+			# # append all features vertically
+			temp_feat = np.append(temp_skew,temp_kurt, axis=1)
+			temp_feat = np.append(temp_feat, temp_var,axis=1)
+			temp_feat = np.append(temp_feat, temp_wav, axis=1)
+			# print(temp_feat.shape)
+			# temp_feat = np.concatenate((temp_skew, temp_kurt), axis=1)
+			# print(temp_feat.shape)
 			temp_labels = np.array(eeg.label).reshape(-1,)
+
 
 			# print(temp_feat.shape)
 			labels = np.append(labels, temp_labels, axis=0)
@@ -215,23 +233,19 @@ def getFeaturesForEEGSample(eegSamples, savelFiles=0):
 
 			features = np.append(features, temp_feat, axis=0)
 
-		if saveFiles:
-			saveFiles()
+	if save:
+		saveFiles(labels, features)
 	print('------ Finished reading through all samples -----')
 
 	return features, labels
 
 
-def saveFiles():
-	np.save('Data/labels.npy', labels)
-	print('Saved labels as Data/labels.npy')
-	np.save('Data/features.npy', features)
-	print('Saved features as Data/features.npy')
 
-	
+
+
 # folder = '/Users/graemecox/Documents/Capstone/Data/EEG_Data/'
-# folder = '/Volumes/SeagateBackupPlusDrive/EEG_Data/SeizureDetectionData/'
-# # eegList = returnEEGSubjects(folder)
+# # folder = '/Volumes/SeagateBackupPlusDrive/EEG_Data/SeizureDetectionData/'
+# eegList = returnEEGSubjects(folder)
 # fn = '/Users/graemecox/Documents/Capstone/Code/eegSvm/Data/eeg_samples_Dog_1_3.npy'
 # eegList = np.load(fn)
 
