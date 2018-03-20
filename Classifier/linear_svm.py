@@ -148,19 +148,19 @@ def parameterScore(X_train, y_train, X_test, y_test):
 
 
 
-labels = np.load('../Data/labels.npy')
-feat = np.load('../Data/features.npy')
-n_classes = 2
+# labels = np.load('../Data/labels.npy')
+# feat = np.load('../Data/features.npy')
+# n_classes = 2
 
-# y = label_binarize(labels, classes=[-1, 1])
-# n_classes = y.shape[1]
+# # y = label_binarize(labels, classes=[-1, 1])
+# # n_classes = y.shape[1]
 
-# random_state = np.random.RandomState(0)
-# n_samples, n_features = feat.shape
-# feat = np.c_[feat, random_state.randn(n_samples, 200 * n_features)]
+# # random_state = np.random.RandomState(0)
+# # n_samples, n_features = feat.shape
+# # feat = np.c_[feat, random_state.randn(n_samples, 200 * n_features)]
 
-X_train, X_test, y_train, y_test = train_test_split(
-	feat, labels, test_size=0.2, random_state=0)
+# X_train, X_test, y_train, y_test = train_test_split(
+# 	feat, labels, test_size=0.2, random_state=0)
 
 # print('Starting classification')
 # # classifier = svm.SVC(C=5, kernel='linear',degree=1)
@@ -180,12 +180,12 @@ X_train, X_test, y_train, y_test = train_test_split(
 #     fpr[i], tpr[i], _ = roc_curve(y_test[:, i], y_score[:, i])
 #     roc_auc[i] = auc(fpr[i], tpr[i])
 
-print(X_train.shape)
 
+# print(X_train.shape)
 
-print('Start optimize')
-# optimizeSVM(X_train, y_train, X_test, y_test)
-parameterScore(X_train, y_train, X_test, y_test)
+# print('Start optimize')
+# # optimizeSVM(X_train, y_train, X_test, y_test)
+# parameterScore(X_train, y_train, X_test, y_test)
 
 # scores = train_multiple_classifiers(X_train, y_train, X_test, y_test,0)
 # scores = np.array(scores)
