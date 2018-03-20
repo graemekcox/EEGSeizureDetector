@@ -1,9 +1,12 @@
 ##kaggle reader
 import sys
 sys.path.insert(0, '/Users/graemecox/Documents/Capstone/Code/eegSvm/Features')
+sys.path.insert(0, '/Users/graemecox/Documents/Capstone/Code/eegSvm/PreprocessingFunctions')
 
 from fe_wavelet import *
 from fe_bandpower import *
+from eeg import *
+
 
 import numpy as np 
 import scipy.io as spio
@@ -87,7 +90,7 @@ def readKaggleDataset(root,saveFiles=0):
 	test_clips = []
 
 	labels = []
-	# num_feat = 10
+	num_feat = 10
 
 	features = np.empty((0,num_feat), float)
 
@@ -143,4 +146,98 @@ def readKaggleDataset(root,saveFiles=0):
 
 
 	return features, labels, test_clips
+
+def returnEEGSubjects(root):
+	subfolders = getSubfolders(root)
+
+	labels = []
+	# num_feat = 10
+	features = np.empty((0,num_feat), float)
+	eegList = []
+
+	fns = np.array(0,)
+	# num_feat = 10
+
+	features = np.empty((0,num_feat), float)
+
+	print('------Starting to read from subfolders ------')
+	for subfolder in subfolders:
+		# print(root+subfolder)
+		folder = root+subfolder
+		print('Reading data from subfolder  %s' % folder)
+
+		files = os.listdir(folder) #Get all files in subfolder
+
+		#Find all files with certain keyword
+		for file in glob.glob(folder+'/*_ictal_*.mat'):
+			# ictal_clips.append(file)
+			eegList.append(EEG_Sample(file))
+
+		for file in glob.glob(folder+'/*_interictal_*.mat'):
+			# interictal_clips.append(file)
+			eegList.append(EEG_Sample(file))
+
+	print('%d number of EEG Samples' % len(eegList))
+
+	np.save('/Users/graemecox/Documents/Capstone/Data/eeg_samples',eegList)
+	return eegList
+
+def getFeaturesForEEGSample(eegSamples):
+	
+	labels = np.array([])
+	num_feat = 5
+
+	features = np.empty((0,num_feat))
+	temp_label = np.empty((1,),int)
+
+	print('----- Starting to read from samples -----')
+	for eeg in eegSamples:
+	
+		temp_data = eeg.data
+
+		num_elec = temp_data.shape[0]
+		# print(num_elec)
+
+		for i in range(num_elec):
+			elec_data = temp_data[i][:]
+
+
+			temp_feat = fe_waveletdecomp(elec_data)
+			temp_labels = np.array(eeg.label).reshape(-1,)
+
+			# print(temp_feat.shape)
+			labels = np.append(labels, temp_labels, axis=0)
+			# print(features.shape)
+			features = np.append(features, temp_feat, axis=0)
+
+	return features, labels
+
+# 	return names, np.array(eegList)
+
+# folder = '/Users/graemecox/Documents/Capstone/Data/EEG_Data/Dog_1'
+# temp = np.array(glob.glob(folder+'/*_ictal_*.mat'))
+# print(temp.shape)
+# temp2 = np.array(glob.glob(folder+'/*_interictal_*.mat'))
+# print(temp2[5])
+# temp = np.append(temp, temp2 )
+# print(temp.shape)
+# eegList = np.load('../Data/eeg_samples.npy')
+# folder = '/Users/graemecox/Documents/Capstone/Data/EEG_Data/'
+folder = '/Volumes/SeagateBackupPlusDrive/EEG_Data/SeizureDetectionData/'
+# eegList = returnEEGSubjects(folder)
+fn = '/Users/graemecox/Documents/Capstone/Code/eegSvm/Data/eeg_samples_Dog_1_3.npy'
+eegList = np.load(fn)
+
+smallList = eegList[0:5]
+
+feat, labels = getFeaturesForEEGSample(smallList)
+print(feat.shape)
+print(labels.shape)
+# print(temp.shape)
+# print(temp[0])
+# print(eegList.shape)
+# print(eegList[1].subject)
+
+
+
 
