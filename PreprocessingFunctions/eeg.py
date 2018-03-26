@@ -2,7 +2,7 @@ import numpy as np
 import scipy.io as spio
 import matplotlib.pyplot as plt
 import os
-
+import glob
 
 
 class EEG_Sample:
@@ -21,7 +21,8 @@ class EEG_Sample:
 		if (-1 != path.find('_ictal_')):
 			self.label = 0
 
-			self.latency = -1
+			self.latency = -mat['latency']. #only appears in ictal segments
+			#time between seizure onset and first data point in data segment
 		elif (-1 != path.find('_interictal_')):
 			self.label = 1
 
@@ -30,6 +31,8 @@ class EEG_Sample:
 		 	self.label = -1 # for test data. 
 
 			self.latency = -1
+
+		#find 
 	def setData(self, new_data):
 		self.data = new_data
 
@@ -65,7 +68,52 @@ class EEG_Sample:
 
 
 	# def addNoise(data):
+class Patient:
+	def __init__(self, id, age, folder):
+		self.id = id
+		self.age = age
+		self.folder = folder
 
+		self.eegList = []
+		self.ictalSamples= []
+		self.getEEGSamples()
+		
+
+	def getEEGSamples(self):
+		files = os.listdir(self.folder) # get all files from subfolder
+
+		for file in glob.glob(self.folder+'*_ictal_*.mat'):
+			eegTemp = EEG_Sample(file)
+			self.eegList.append(eegTemp)
+			self.ictalSamples.append(eegTemp)
+
+		for file in glob.glob(self.folder+'*_interIctal_*.mat'):
+			eegTemp = EEG_Sample(file)
+			self.eegList.append(eegTemp)
+
+
+
+
+
+# fn = '/Users/graemecox/Documents/Capstone/Data/EEG_Data/Dog_3/Dog_3_ictal_segment_17.mat'
+# test = EEG_Sample(fn)
+
+# # print(test.fn)
+
+# mat = spio.loadmat(fn)
+# print(mat['latency'])	
+
+
+# folder = '/Users/graemecox/Documents/Capstone/Data/EEG_Data/Dog_3/'
+
+
+# # for file in glob.glob(folder):
+# # 	print(file)
+# dog1 = Patient(1317204,22,folder)
+# print(len(dog1.eegList))
+
+# ictalPeriods = dog1.ictalSamples
+# print(ictalPeriods[0].latency)
 
 
 # print(test.subject)
