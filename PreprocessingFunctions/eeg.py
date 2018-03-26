@@ -21,7 +21,7 @@ class EEG_Sample:
 		if (-1 != path.find('_ictal_')):
 			self.label = 0
 
-			self.latency = -mat['latency']. #only appears in ictal segments
+			self.latency = -mat['latency'] #only appears in ictal segments
 			#time between seizure onset and first data point in data segment
 		elif (-1 != path.find('_interictal_')):
 			self.label = 1
@@ -77,6 +77,7 @@ class Patient:
 		self.eegList = []
 		self.ictalSamples= []
 		self.getEEGSamples()
+		self.ictalIndex = 0
 		
 
 	def getEEGSamples(self):
@@ -91,7 +92,13 @@ class Patient:
 			eegTemp = EEG_Sample(file)
 			self.eegList.append(eegTemp)
 
+	def setIctalIndex(self, index):
+		self.ictalIndex = index
 
+	def exportSeizureData(self):
+		temp =self.ictalSamples[self.ictalIndex].data
+		print(temp.shape)
+		np.savetxt('../Data/seizure.csv',temp,delimiter=",")  #Write out the file with rows being each electrode
 
 
 
@@ -104,13 +111,22 @@ class Patient:
 # print(mat['latency'])	
 
 
-# folder = '/Users/graemecox/Documents/Capstone/Data/EEG_Data/Dog_3/'
+folder = '/Users/graemecox/Documents/Capstone/Data/EEG_Data/Dog_3/'
 
 
 # # for file in glob.glob(folder):
 # # 	print(file)
-# dog1 = Patient(1317204,22,folder)
-# print(len(dog1.eegList))
+
+
+# First parameter is the patient ID
+dog1 = Patient(1317204,22,folder)
+
+dog1.exportSeizureData() #Export next seizure in the list
+i = dog1.ictalIndex + 1 #Increment the index
+dog1.setIctalIndex(i) #Set new Index
+dog1.exportSeizureData() #Export next seizure in the list
+
+
 
 # ictalPeriods = dog1.ictalSamples
 # print(ictalPeriods[0].latency)
