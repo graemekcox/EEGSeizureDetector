@@ -97,8 +97,9 @@ class Patient:
 
 	def exportSeizureData(self):
 		temp =self.ictalSamples[self.ictalIndex].data
-		print(temp.shape)
-		np.savetxt('../Data/seizure.csv',temp,delimiter=",")  #Write out the file with rows being each electrode
+		head = 'Patient ID:' + str(self.id)+',Age:'+str(self.age)+',Seizure # '+str(self.ictalIndex)
+		print('Wrote seizure to seizure.csv with following parameters: %s' % head)
+		np.savetxt('../Data/seizure.csv',temp,header=head ,delimiter=",")  #Write out the file with rows being each electrode
 
 
 
