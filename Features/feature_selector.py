@@ -3,10 +3,10 @@ import numpy as np
 from sklearn.decomposition import PCA
 import matplotlib.pyplot as plt
 from sklearn.preprocessing import StandardScaler
-from sklearn.feature_selection import SelectKBest, chi2, f_classif,mutual_info_classif
+from sklearn.feature_selection import SelectKBest, chi2, f_classif,mutual_info_classif, RFE
 from sklearn.model_selection import cross_val_score,train_test_split
 from sklearn import svm
-
+from sklearn.linear_model import LogisticRegression
 
 def use_pca(features, numComp=3):
 	pca = PCA(n_components=numComp)
@@ -62,7 +62,16 @@ def univariateSelection(features,labels):
 	np.savetxt('../Data/kBestScores.csv',score,delimiter=",") 
 	# print(score)
 
+def logisticRegression(features,labels):
+	model = LogisticRegression()
 
+	rfe = RFE(model, 6 ) #Choose top 6 features
+	X_train, X_test, y_train, y_test = train_test_split(
+		feat, labels, test_size=0.2, random_state=0)
+	fit = rfe.fit(X_train, y_train)
+	print('------ Using %d features ------') % fit.n_features_
+	print("Selected Features: %s") % fit.support_
+	print("Feature Ranking: %s") % fit.ranking_
 
 
 
@@ -73,25 +82,8 @@ feat = np.nan_to_num(feat)
 print(labels.shape)
 print(feat.shape)
 
-
-# feat_x = feat.shape[0]
-# print(feat_x)
-
-# new_feat = feat.shape[0]/labels.shape[0]
-# feat = feat.reshape(feat_x/new_feat,new_feat)
-# print(feat.shape)
-
-
-# np.nan_to_num(feat)
-# X_train, X_test, y_train, y_test = train_test_split(
-# feat, labels, test_size=0.2, random_state=0)
-
-# y_train.ravel()
-# model.fit(X_train,y_train)		
-
-# scores = cross_val_score(model, X_test, y_test, cv=5)
-# print("Accuracy: %0.5f (+/- %0.5f)" % (scores.mean(), scores.std() *2))
-univariateSelection(feat, labels)
+logisticRegression(feat,labels)
+# univariateSelection(feat, labels)
 
 ## PCA Stuff
 # z_scaler = StandardScaler()
