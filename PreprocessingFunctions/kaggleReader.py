@@ -211,7 +211,8 @@ def getFeaturesForEEGSample(eegSamples, save=0):
 	# num_feat = 8
 
 	# features = np.empty((0,num_feat))
-	features = np.array([])
+	# features = np.array([])
+	features = np.empty((0,19))
 	temp_label = np.empty((1,),int)
 
 	print('----- Starting to read from samples -----')
@@ -233,35 +234,48 @@ def getFeaturesForEEGSample(eegSamples, save=0):
 		num_elec = temp_data.shape[0]
 
 		for i in range(num_elec):
-			temp_feat = np.array([])
+			# temp_feat = np.array([])
 			elec_data = temp_data[i][:]
 
 			# print('PFD Size: (%d,%d)' % (temp_pfd.shape[0],temp_pfd.shape[1]))
-			temp_feat = np.append(temp_feat,pfd(elec_data))
+			# temp_feat = np.append(temp_feat,pfd(elec_data),axis=1)
 
-			temp_feat = np.append(temp_feat, fe_waveletdecomp(elec_data))
+			# temp_feat = pfd(elec_data)
 
-			temp_feat = np.append(temp_feat,hurst(elec_data))
+
+
+			temp_bin =  np.array(bin_power(elec_data, [0.5,4,7,12,30] , eeg.Fs[0]))
+			temp_bin =temp_bin.reshape(1,8) 
+
+			temp_feat = np.append(fe_waveletdecomp(elec_data), temp_bin,axis=1)
+
+			temp_pfd = np.array(pfd(elec_data)).reshape(-1,1)
+			temp_feat = np.append(temp_feat,temp_pfd,axis=1)
+
+			temp_hurst = np.array(hurst).reshape(-1,1)
+			temp_feat = np.append(temp_feat,temp_hurst,axis=1)
 
 			## Size (400,1)
 			# temp_es = embed_seq(elec_data,4,1)
 			# print(temp_es.shape)
 			# temp_feat = np.append(temp_feat, embed_seq(elec_data,4,1))
 
-			temp_bin =  bin_power(elec_data, [0.5,4,7,12,30] , eeg.Fs[0])
-			temp_feat = np.append(temp_feat, temp_bin)
+			# temp_bin =  bin_power(elec_data, [0.5,4,7,12,30] , eeg.Fs[0])
+			# temp_feat = np.append(temp_feat, temp_bin,axis=1)
 
 			# print(temp_feat)
 			##Size 399
 			temp_diff=  first_order_diff(elec_data)
 			# print(len(temp_diff))
 			# temp_feat = np.append(temp_feat, temp_diff)
+			temp_hfd = np.array(hfd(elec_data,100)).reshape(-1,1)
+			temp_feat = np.append(temp_feat, temp_hfd,axis=1) #kMax set to 100 for now, not sure how high this is
 
-			temp_feat = np.append(temp_feat, hfd(elec_data, 100)) #kMax set to 100 for now, not sure how high this is
+			temp_hj = np.array(hjorth(elec_data, temp_diff)).reshape(-1,2)
+			temp_feat = np.append(temp_feat, temp_hj,axis=1)
 
-			temp_feat = np.append(temp_feat, hjorth(elec_data, temp_diff))
-
-			temp_feat = np.append(temp_feat, spectral_entropy(elec_data, [0.5,4,7,12,30] , eeg.Fs))
+			temp_se = np.array(spectral_entropy(elec_data, [0.5,4,7,12,30] , eeg.Fs)).reshape(-1,1)
+			temp_feat = np.append(temp_feat, temp_se,axis=1)
 			# temp_feat = fe_waveletdecomp(elec_data)
 			# print(temp_feat.shape)
 			# temp_skew = fe_skewness(elec_data)
@@ -275,7 +289,6 @@ def getFeaturesForEEGSample(eegSamples, save=0):
 			# print(temp_feat.shape)
 			# temp_feat = np.concatenate((temp_skew, temp_kurt), axis=1)
 			# print(temp_feat.shape)
-
 			temp_labels = np.array(eeg.label).reshape(-1,)
 
 
@@ -284,6 +297,7 @@ def getFeaturesForEEGSample(eegSamples, save=0):
 			# print(features.shape)
 
 			features = np.append(features, temp_feat, axis=0)
+			# print(features.shape)
 
 	if save:
 		saveFiles(labels, features)
@@ -295,29 +309,26 @@ def getFeaturesForEEGSample(eegSamples, save=0):
 
 
 
-# folder = '/Users/graemecox/Documents/Capstone/Data/EEG_Data/'
+folder = '/Users/graemecox/Documents/Capstone/Data/EEG_Data/'
 
 # # feat, labels = readKaggleDataset(folder)
 
 # # # # folder = '/Volumes/SeagateBackupPlusDrive/EEG_Data/SeizureDetectionData/'
-# eegList = returnEEGSubjects(folder)
+eegList = returnEEGSubjects(folder)
 # # # fn = '/Users/graemecox/Documents/Capstone/Code/eegSvm/Data/eeg_samples_Dog_1_3.npy'
 # # # eegList = np.load(fn)
 
 # # smallList = eegList[0:5]
-# smallList = eegList[0:len(eegList)/5]
+smallList = eegList[0:len(eegList)/3]
 
-# feat, labels = getFeaturesForEEGSample(smallList)
-# print(feat.shape)
-# print(labels.shape)
-# np.save('/Users/graemecox/Documents/Capstone/Code/eegSvm/Data/big_labels.npy', labels)
-# print('Saved labels as Data/big_labels.npy')
-# np.save('/Users/graemecox/Documents/Capstone/Code/eegSvm/Data/big_features.npy',feat)
-# print('Saved features as Data/big_features.npy')
-# # print(temp.shape)
-# print(temp[0])
-# print(eegList.shape)
-# print(eegList[1].subject)
+feat, labels = getFeaturesForEEGSample(smallList)
+print(feat.shape)
+print(labels.shape)
+np.save('/Users/graemecox/Documents/Capstone/Code/eegSvm/Data/big_labels.npy', labels)
+print('Saved labels as Data/big_labels.npy')
+np.save('/Users/graemecox/Documents/Capstone/Code/eegSvm/Data/big_features.npy',feat)
+print('Saved features as Data/big_features.npy')
+
 
 
 
