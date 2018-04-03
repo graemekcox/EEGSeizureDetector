@@ -4,7 +4,6 @@ import matplotlib.pyplot as plt
 import os
 import glob
 
-
 class EEG_Sample:
 
 	def __init__(self, path):
@@ -69,10 +68,13 @@ class EEG_Sample:
 
 	# def addNoise(data):
 class Patient:
-	def __init__(self, id, age, folder):
+	def __init__(self, id, age,weight, height,symptom, folder):
 		self.id = id
 		self.age = age
+		self.weight = weight
+		self.height = height
 		self.folder = folder
+		self.symptom = symptom
 
 		self.eegList = []
 		self.ictalSamples= []
@@ -97,42 +99,74 @@ class Patient:
 
 	def exportSeizureData(self):
 		temp =self.ictalSamples[self.ictalIndex].data
-		head = 'Patient ID:' + str(self.id)+',Age:'+str(self.age)+',Seizure # '+str(self.ictalIndex)
+		head = str(self.id)+','+str(self.age)+','+str(self.ictalIndex) +','+ str(self.weight)+','+ str(self.height)
 		print('Wrote seizure to seizure.csv with following parameters: %s' % head)
 		np.savetxt('../Data/seizure.csv',temp,header=head ,delimiter=",")  #Write out the file with rows being each electrode
 
 
 
-# fn = '/Users/graemecox/Documents/Capstone/Data/EEG_Data/Dog_3/Dog_3_ictal_segment_17.mat'
-# test = EEG_Sample(fn)
 
-# # print(test.fn)
+# root = '/Users/graemecox/Documents/Capstone/Data/EEG_Data/'
 
-# mat = spio.loadmat(fn)
-# print(mat['latency'])	
+# subfolders = os.listdir(root)
+# subfolders.remove('.DS_Store')
 
 
-folder = '/Users/graemecox/Documents/Capstone/Data/EEG_Data/Dog_3/'
+# labels = []
+# # num_feat = 10
+# # features = np.empty((0,num_feat), float)
+# features = np.array([])
+# eegList = []
+
+# fns = np.array(0,)
+# # num_feat = 10
+
+# print('------Starting to read from subfolders ------')
+# for subfolder in subfolders:
+# 	# print(root+subfolder)
+# 	folder = root+subfolder
+# 	print('Reading data from subfolder  %s' % folder)
+
+# 	files = os.listdir(folder) #Get all files in subfolder
+
+# 	#Find all files with certain keyword
+# 	for file in glob.glob(folder+'/*_ictal_*.mat'):
+# 		# ictal_clips.append(file)
+# 		eegList.append(EEG_Sample(file))
+
+# 	for file in glob.glob(folder+'/*_interictal_*.mat'):
+# 		# interictal_clips.append(file)
+# 		eegList.append(EEG_Sample(file))
+
+# print('%d number of EEG Samples' % len(eegList))
+
+# np.save('patients.npy')
+# # feat, labels = readKaggleDataset(folder)
+
+# # # # folder = '/Volumes/SeagateBackupPlusDrive/EEG_Data/SeizureDetectionData/'
+
+# print(len(eegList))
+# # ####### EXAMPLE #######
+# folder = '/Users/graemecox/Documents/Capstone/Data/EEG_Data/Dog_1/'
 
 
-# # for file in glob.glob(folder):
-# # 	print(file)
+# # # # First parameter is the patient ID
+# dog1 = Patient(1317204,10,folder)
+
+# # pat1.exportSeizureData() #Export next seizure in the list
+
+# dog1.setIctalIndex(4) #Set new Index
+# dog1.exportSeizureData() #Export next seizure in the list
 
 
-# First parameter is the patient ID
-dog1 = Patient(1317204,22,folder)
-
-dog1.exportSeizureData() #Export next seizure in the list
-i = dog1.ictalIndex + 1 #Increment the index
-dog1.setIctalIndex(i) #Set new Index
-dog1.exportSeizureData() #Export next seizure in the list
+# ### Normal segment
 
 
+# mat = spio.loadmat('/Users/graemecox/Documents/Capstone/Data/EEG_Data/Dog_1/Dog_1_interictal_segment_70.mat')
 
-# ictalPeriods = dog1.ictalSamples
-# print(ictalPeriods[0].latency)
+# Fs = mat['freq']
+# data = mat['data']
+# head =  '1317204,10,Normal,30,50'
+# np.savetxt('../Data/normal.csv',data ,header=head,delimiter=",")  #Write out the file with rows being each electrode
 
 
-# print(test.subject)
-# test.plotFourierSeries(60)
-# test.plotTimeSeries(17)
