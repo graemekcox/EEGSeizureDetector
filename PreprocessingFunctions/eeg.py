@@ -81,7 +81,7 @@ class Patient:
 		self.interictalSamples = []
 		self.getEEGSamples()
 		self.ictalIndex = 0
-		self.normalSample = self.interictalSamples[1]
+		self.normalSample = self.interictalSamples[0]
 		
 
 	def getEEGSamples(self):
@@ -92,7 +92,7 @@ class Patient:
 			self.eegList.append(eegTemp)
 			self.ictalSamples.append(eegTemp)
 
-		for file in glob.glob(self.folder+'*_interIctal_*.mat'):
+		for file in glob.glob(self.folder+'*_interictal_*.mat'):
 			eegTemp = EEG_Sample(file)
 			self.eegList.append(eegTemp)
 			self.interictalSamples.append(eegTemp)
